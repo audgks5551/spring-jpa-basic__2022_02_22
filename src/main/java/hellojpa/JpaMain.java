@@ -31,12 +31,11 @@ public class JpaMain {
             // 영속성 컨텍스트에 저장
             em.persist(member);
             em.persist(member2);
-            tx.commit(); // 영속성컨텍스트 -> 데이터베이스
-            em.clear(); // 영속성컨텍스트 비우기
+            em.flush();
+            em.clear();
 
             /////////////////////////////////////////////
 
-            tx.begin();
             // 전체 조회 쿼리 작성
             List<Member> members = em.createQuery(
                     "select m from Member as m",
@@ -48,12 +47,10 @@ public class JpaMain {
                 System.out.println(m.getId() + "의 이름 = " + m.getName());
             }
 
-            tx.commit(); // 영속성컨텍스트 -> 데이터베이스
+            em.flush();
             em.clear(); // 영속성컨텍스트 비우기
 
             //////////////////////////////////////////////
-
-            tx.begin(); // 트랜잭션 시작
 
             // member id를 통한 데이터 조회 (영속성컨테스트에서 비웠으므로 DB에서 데이터를 가져옴)
             // 데이터베이스 -> 영속성컨텍스트
@@ -65,12 +62,11 @@ public class JpaMain {
 
             // 영속성 컨텍스트에 운영중인 객체이므로 setName으로 변경만 해주어도 수정 가능 (수정은 한 트랜잭션안에서만 가능)
             findMember.setName("kim");
-            tx.commit(); // 영속성컨텍스트 -> 데이터베이스
+            em.flush();
             em.clear(); // 영속성컨텍스트 비우기
 
             ////////////////////////////////////////////////
 
-            tx.begin();
             // 다시 불러오기
             // 데이터베이스 -> 영속성컨텍스트
             Member modifyedMember = em.find(Member.class, member.getId());
