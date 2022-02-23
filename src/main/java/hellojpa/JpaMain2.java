@@ -28,7 +28,7 @@ public class JpaMain2 {
             Member member = new Member();
 //            member.setTeamId(team.getId()); // 테이블 중심
             member.setUsername("member1");
-            member.setTeam(team);
+            member.putTeam(team); // 연관관계 편의 메서드
             em.persist(member);
 
             System.out.println("==============2");
@@ -43,6 +43,11 @@ public class JpaMain2 {
 
             System.out.println(member == findMember);
             System.out.println("==============3");
+
+            List<Member> members = findTeam.getMembers();
+            for (Member m : members) {
+                System.out.println("m = " + m);
+            }
 
             tx.commit();
         } catch (Exception e) {
