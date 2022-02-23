@@ -19,7 +19,32 @@ public class JpaMain2 {
 
         try {
 
+            Team team =  new Team();
+            team.setName("TeamA");
+            em.persist(team);
 
+            System.out.println("============1");
+
+            Member member = new Member();
+//            member.setTeamId(team.getId()); // 테이블 중심
+            member.setUsername("member1");
+            member.setTeam(team);
+            em.persist(member);
+
+            System.out.println("==============2");
+            em.flush();
+            em.clear();
+            System.out.println("==============2");
+
+            Member findMember = em.find(Member.class, member.getId());
+//            Long findTeamId = findMember.getTeamId(); // 테이블 중심
+//            Team findTeam = em.find(Team.class, findTeamId); // 테이블 중심
+            Team findTeam = findMember.getTeam();
+
+            System.out.println(member == findMember);
+            System.out.println("==============3");
+
+            tx.commit();
         } catch (Exception e) {
             tx.rollback();
         } finally {
